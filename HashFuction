@@ -1,0 +1,189 @@
+#include <iostream>
+using namespace std;
+// Объявить и ввести массив структур из n элементов. Создать хештаблицу из М элементов. Осуществить поиск элемента по ключу в хеш-таблице.
+//Вывести на экран исходный массив, хеш-таблицу и все поля найденной структуры. Задание выбрать в соответствии с номером варианта в табл. V.
+// key time
+//на основе связных списков
+//М=10
+
+struct train
+{
+	char area[30];
+	int number;
+	int time;
+};
+
+struct Task 
+{ 
+	train inf;  
+    Task* p; 
+};
+
+Task** Create(int M) 
+{ 
+	Task** H = new Task * [M];
+	for (int i = 0; i < M; i++)
+	{
+		H[i] = NULL;
+	}
+	return H;
+}
+
+void Add(train inf, int m, Task** H)
+{
+	Task* spt = new Task;
+	spt->inf = inf;
+	int i = inf.time % m;
+
+	if (H[i] == NULL)
+	{
+		H[i] = spt;
+		spt->p = NULL;
+	}
+	else
+	{
+		spt->p = H[i];
+		H[i] = spt;
+	}
+}
+
+Task* Search(int inf, int m, Task** H) 
+{ 
+	int i = abs(inf % m);  
+	Task* spt = H[i];  
+	while (spt != NULL) 
+	{ 
+		if (spt->inf.time == inf) return spt; 
+		spt = spt->p; 
+	} 
+	return NULL; 
+}
+
+void Delete(int m, Task** H)
+{ 
+	Task* spt, * sp; 
+	for (int i = 0; i < m; i++) 
+	{
+		cout << "H[" << i << "]= "; 
+		sp = H[i]; 
+		while (sp != NULL)
+		{
+			cout << sp->inf.time << " "; 
+			spt = sp;
+			sp = sp->p;
+			delete spt;
+		} 
+		cout << endl;
+	}  
+	delete[]H;
+}
+
+void View(Task* p)
+{
+	cout << "Место прибывания:" << p->inf.area << "\nНомер рейса: " << p->inf.number << "\nВремя отправления: " << p->inf.time << endl;
+}
+
+void ViewTable(Task* p)
+{
+	Task* t = p;
+	if (p == NULL)
+	{
+		return;
+	}
+	while (t != NULL)
+	{
+		cout << "Место прибывания:" << p->inf.area << "\nНомер рейса" << p->inf.number << "\nВремя отправления" << p->inf.time << endl;
+		t = t->p;
+	}
+}
+
+void main() {
+	setlocale(LC_ALL, "Russian");
+	train* t = new train;
+	train** hashTable = nullptr;
+	Task** H = NULL;
+	int choice, M, size;
+	double time1;
+	bool prov=false;
+	while (true)
+	{
+		cout << "1.Добавить элементы\n2.Найти элемент\n3.Просмотреть таблицу\n4.Очистить\n5.Выйти"<<endl;
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+
+			cout << "Введите размер хэш таблицы (стандарт 10)" << endl;
+			cin >> M;
+			hashTable = new train * [M];
+			cout << "Введите количество элементов для ввода" << endl;
+			cin >> size;
+			while (size > M)
+			{
+				cout << "Количество элементов больше размера хэш таблицы" << endl;
+				cin >> size;
+			}
+			for (int i = 0; i < size; i++)
+			{
+				cout << "Введите место прибывания: ";
+				cin.ignore();
+				cin.getline(t[i].area, 30);
+				cout << "Введите номер рейса: ";
+				cin >> t[i].number;
+				cout << "Введите время отправления: ";
+				cin >> t[i].time;
+			}
+			H = Create(M);
+			for (int i = 0; i < size; i++)
+			{
+				Add(t[i], M, H);
+			}
+			prov == true;
+		
+			break;
+		case 2:
+
+			if(prov)
+			{
+				cout << "Введите данные для поиска" << endl;
+				return;
+			}
+			cout << "Введите время отправления" << endl;
+			cin >> time1;
+			Task* p;
+			while (time1 != -1)
+			{
+				p = Search(time1, M, H);
+				if (p == NULL)
+					cout << "Нет элемента" << endl;
+				else
+					cout << "Элемент найден" << endl;
+				View(p);
+				cout << endl;
+				break;				
+			}
+			break;
+		case 3:
+			if (hashTable == NULL)
+			{
+				cout << "Создайте хэш таблицу" << endl;
+				return;
+			}
+			for (int i = 0; i < M; i++)
+			{
+				ViewTable(H[i]);
+			}
+			break;
+		case 4:
+			Delete(M, H);
+			break;
+		case 5:
+			exit(0);
+			break;
+		default:
+			cout << "Повторите еще раз" << endl;
+			break;
+
+		}
+	}
+}
