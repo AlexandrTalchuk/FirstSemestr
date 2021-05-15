@@ -1,0 +1,331 @@
+#define _CRT_SECURE_NO_WARNINGS
+// Вывести информацию для заданного пункта назначения в порядке возрастаняи времени вылета. Ключ: пункт назначения
+#include <iostream>
+#include <io.h>
+#include <conio.h>
+#include<cstdio>
+
+using namespace std;
+
+void Add();
+void Watching();
+void Searching();
+void Sorting();
+void Searching();
+
+struct Stack
+{
+    int left, right;
+    Stack* next;
+};
+
+struct air
+{
+    int number;
+    char type[36];
+    char area[36];
+    double time;
+};
+
+
+
+
+int main()
+{
+    setlocale(LC_ALL, "rus");
+    int choice;
+    while (true)
+    {
+        cout << "1. Добавление\n2. Просмотр\n3. Сортировка\n4. Поиск\n5. Выход" << endl;
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            Add();
+            cout << "Информация сохранена, нажмите любую кнопку" << endl;
+            _getch();
+            break;
+        case 2:
+            Watching();
+            _getch();
+            break;
+        case 3:
+            Sorting();
+            _getch();
+            break;
+        case 4:
+            Searching();
+            _getch();
+            break;
+        case 5:
+            cout << "Программа завершена" << endl;
+            return 0;
+            break;
+        default:
+            cout << "Повторите еще раз" << endl;
+            return 0;
+            break;
+        }
+        system("cls");
+    }
+}
+
+void Add()
+{
+    FILE* f;
+    air one;
+    char filename[81];
+    cout << "Введите имя файла" << endl;
+    cin >> filename;
+    f = fopen(filename, "a");
+    if (f == NULL)
+    {
+        cout << "Данного файла не существует" << endl;
+        return;
+    }
+    cout << "Введите номер рейса" << endl;
+    cin >> one.number;
+    cout << "Ведите тип самолета" << endl;
+    cin >> one.type;
+    cout << "Ведите пункт назначения" << endl;
+    cin >> one.area;
+    cout << "Ведите время вылета" << endl;
+    cin >> one.time;
+    fwrite(&one, sizeof(air), 1, f);
+    fclose(f);
+}
+
+void Watching()
+{
+    FILE* f;
+    air one;
+    char filename[81];
+    cout << "Введите имя файла" << endl;
+    cin >> filename;
+    f = fopen(filename, "r");
+    if (f == NULL)
+    {
+        cout << "Данного файла не существует" << endl;
+        return;
+    }
+    while (fread(&one, sizeof(air), 1, f) == 1)
+    {
+        cout << "Номер рейса " << one.number << endl;
+        cout << "Тип самолета " << one.type << endl;
+        cout << "Пункт назначения " << one.area << endl;
+        cout << "Время вылета " << one.time << endl << endl;
+    }
+    fclose(f);
+    return;
+}
+
+void Searching()
+{
+    FILE* f;
+    air a1;
+    char filename[81], place[81];
+    int choice, middle = 0;
+    cout << "Введите имя файла" << endl;
+    cin.ignore();
+    cin.getline(filename, 81);
+    f = fopen(filename, "r");
+    if (f == NULL)
+    {
+        cout << "Данного файла не существует" << endl;
+        return;
+    }
+    fseek(f, 0, SEEK_SET);
+    int size = _filelength(_fileno(f));
+    size /= sizeof(air);
+    cout << "Введите ключ: ";
+    cin.getline(place, 81);
+    cin.ignore();
+    cout << "1.Линейный поиск" << "\n2.Бинарный поиск" << endl;
+    cin >> choice;
+    switch (choice)
+    {
+    case 1:
+    {
+        int kod = 0;
+        for (int i = 0; i < size; i++)
+        {
+            air temp;
+            fread(&temp, sizeof(air), 1, f);
+            if (!strcmp(temp.area, place))
+            {
+       
+                cout << "Номер рейса " << temp.number << endl;
+                cout << "Тип самолета " << temp.type << endl;
+                cout << "Пункт назначения " << temp.area << endl;
+                cout << "Время вылета " << temp.time << endl << endl;
+                return;
+            }
+        }
+        if (kod == 0)
+            cout << "По вашему запросу ничего не найдено" << endl;
+        return;
+
+    }
+    case 2:
+        air * mas1 = new air[size];
+        fread(mas1, sizeof(air), size, f);
+        fseek(f, 0, SEEK_SET);
+        for (int i = 0; i < size - 1; i++)
+            for (int j = i + 1; j < size; j++)
+                if (strcmp(mas1[i].area, mas1[j].area) > 0)
+                {
+                    air tmp = mas1[i];
+                    mas1[i] = mas1[j];
+                    mas1[j] = tmp;
+                }
+        int left = 0;                                   
+        int right = size - 1;
+        air* search = nullptr;                          
+        while (left <= right)                           
+        {
+            int mid = (left + right) / 2;              
+            if (!strcmp(mas1[mid].area, place))              
+            {
+                search = &mas1[mid];                    
+                break;                                  
+            }
+            if (strcmp(mas1[mid].area, place) == 1)
+                right = mid - 1;                        
+            else                                       
+                left = mid + 1;                        
+        }
+        if (search == nullptr)
+        {
+            cout << "Не найдено";
+            return;
+        }
+        else         
+        cout << "Номер рейса " << search->number << endl;
+        cout << "Тип самолета " << search->type << endl;
+        cout << "Пункт назначения " << search->area << endl;
+        cout << "Время вылета " << search->time << endl << endl;
+        delete[] mas1;
+        break;
+    }
+}
+
+void Sorting()
+{
+    FILE* f;
+    char filename[81];
+    char place[81];
+    int choice, cnt = 0, g = 0, k = 0;
+    cout << "Введите имя файла" << endl;
+    cin.ignore();
+    cin.getline(filename, 81);
+    f = fopen(filename, "r+");
+    if (f == NULL)
+    {
+        cout << "Такого файла не обнаружено!" << endl;
+        return;
+    }
+    int size = _filelength(_fileno(f));
+    size /= sizeof(air);
+
+    cout << "Введите ключ: ";
+    cin.getline(place, 81);
+    cin.ignore();
+
+    for (int i = 0; i < size; i++)
+    {
+        air temp;
+        fread(&temp, sizeof(air), 1, f);
+        if (strcmp(temp.area, place) == 0) cnt++;
+    }
+    air* array = new air[cnt];
+    air* array1 = new air[cnt];
+    fseek(f, 0, SEEK_SET);
+    for (int i = 0; i < size; i++)
+    {
+        air temp;
+        fread(&temp, sizeof(air), 1, f);
+        if (strcmp(temp.area, place) == 0) array[g++] = temp;
+        else array1[k++] = temp;
+    }
+    cout << "1.QuickSort\n" << "2.Сортировка прямым выбором\n" << endl;
+    cin >> choice;
+    switch (choice)
+    {
+    case 1:
+    {
+        Stack* begin = new Stack;
+        begin->left = 0;
+        begin->right = cnt - 1;
+        begin->next = NULL;
+        int i, j, l1, r1;
+        do
+        {
+            i = begin->left;
+            j = begin->right;
+            double x = array[(i + j) / 2].time;
+            do
+            {
+                while (x > array[i].time) i++;
+                while (x < array[j].time) j--;
+                if (i <= j)
+                {
+                    air k = array[i];
+                    array[i] = array[j];
+                    array[j] = k;
+                    i++;
+                    j--;
+                }
+            } while (i < j);
+            l1 = begin->left;
+            r1 = begin->right;
+            Stack* t = begin;
+            begin = begin->next;
+            delete t;
+            if (l1 < j)
+            {
+                Stack* t = new Stack;
+                t->next = begin;
+                t->left = l1;
+                t->right = j;
+                begin = t;
+            }
+            if (i < r1)
+            {
+                Stack* t = new Stack;
+                t->next = begin;
+                t->left = i;
+                t->right = r1;
+                begin = t;
+            }
+        } while (begin != NULL);
+        cout << "Отсортировано!" << endl;
+    }
+    break;
+    case 2:
+        for (int i = 0; i < size - 1; i++)
+        {
+            int m = i;
+            for (int j = i + 1; j < size; j++)
+                if (array[i].time > array[j].time) m = j;
+            if (m != i)
+            {
+                air r = array[m];
+                array[m] = array[i];
+                array[i] = r;
+            }
+        }
+        cout << "Отсортировано!" << endl;
+        break;
+    default:
+        cout << "Неверный ввод" << endl;
+        return;
+        break;
+    }
+    fseek(f, 0, SEEK_SET);
+    fclose(f);
+    fopen(filename, "w");
+    fwrite(array, sizeof(air), cnt, f);
+    fwrite(array1, sizeof(air), size - cnt, f);
+    fclose(f);
+    delete[] array;
+}
