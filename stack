@@ -1,0 +1,154 @@
+#include <iostream>
+#include "windows.h"
+#include <fstream>
+using namespace std;
+struct Stack
+{
+	int info;
+	Stack* next; 
+};
+
+void Push(Stack*& p, int in);
+void View(Stack* p);
+int Pop(Stack*& p);
+void Delete(Stack*& p);	
+void Solution(Stack* head, Stack*& Even_head, Stack* &Odd_head);
+
+int main()
+{
+	setlocale(LC_ALL, "rus");
+	int choice, n, inf = 0;
+	Stack* head = new Stack;
+	Stack* Even_head = NULL, * Odd_head = NULL;
+	head = NULL;
+	while (true)
+	{
+		cout << " 1. Создание\n 2. Добавление\n 3. Просмотр \n 4. Проcмотр с извлечением\n 5. Сортировка\n 6. Выход" << endl;
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+
+			cout << "Введите количество элементов стэка" << endl;
+			cin >> n;
+			for (int i = 0; i < n; i++)
+			{
+				cout << i + 1 << "-ый ";
+				cin >> inf;
+				Push(head, inf);
+			}
+			Sleep(1000);
+			system("cls");
+			break;
+
+		case 2:
+			cout << "Введите элемент" << endl;
+			cin >> inf;
+			Push(head, inf);
+			break;
+
+		case 3:
+			if (head == NULL)
+			{
+				cout << "Стек пуст!" << endl;
+				return 0;
+			}
+			else
+				cout << "Элементы стека:" << endl;
+			View(head);
+			break;
+
+		case 4:
+			cout << "Последний и извлекаемый элемент: " << inf << endl;
+			Pop(head);
+			break;
+
+		case 5:
+			Solution(head,Even_head,Odd_head);
+			cout << "Стек с нечетными числами:" << endl;
+			View(Odd_head);
+			cout << "Стек с четными числами:" << endl;
+			View(Even_head);
+			break;
+		case 6:
+			Delete(Even_head);
+			Delete(Odd_head);
+			cout << Even_head;
+			cout << Odd_head;
+			exit(0);
+			break;
+
+		default:
+			cout << "Повторите еще раз" << endl;
+			Sleep(1000);
+			system("cls");
+			cin >> choice;
+			break;
+
+
+		}
+	}
+}
+void Push(Stack*& p, int in)
+{
+	Stack* tek = new Stack;
+	tek->info = in;
+	tek->next = p;
+	p = tek;
+}
+
+void View(Stack* p)
+{
+	Stack* tek = p;
+	while (tek != NULL)
+	{
+		cout << tek->info << endl;
+		tek = tek->next;
+	}
+}
+
+int Pop(Stack*& p)
+{
+	int out;
+	Stack* tek = p;
+	out = p->info;
+	p = p->next;
+	delete tek;
+	return out;
+
+}
+
+void Delete(Stack*& p)
+{
+	Stack* tek;
+	while (p != NULL)
+	{
+		tek = p;
+		p = p->next;
+		delete tek;
+
+	}
+}
+
+void Solution(Stack* head, Stack*& Even_head, Stack*& Odd_head)
+{
+	Stack*  tek = head;
+	while (tek != NULL)
+	{
+		if (tek->info % 2 == 0)
+		{
+			Stack* tmp = tek;
+			tek = tek->next;
+			tmp->next = Even_head;
+			Even_head = tmp;
+		}
+		else  
+		{
+			Stack* tmp = tek;
+			tek = tek->next;
+			tmp->next = Odd_head;
+			Odd_head = tmp;
+		}
+		
+	}
+}
