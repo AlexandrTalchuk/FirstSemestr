@@ -1,0 +1,571 @@
+//#include <iostream>
+//#include "windows.h"
+//#include <fstream>
+//using namespace std;
+//
+//struct list
+//{
+//    int info;
+//    list* next, * prev;
+//};
+//
+//
+//void Create(list*& head, list*& end);
+//void Add(list*& head, list*& end);
+//void Add_end(list*& end, int inf);
+//void Add_head(list*& head, int inf);
+//void Del_el(list*& head);
+//void Delete(list*& head, list*&);
+//void View(list* head, list* end);
+//void View_head(list* head);
+//void View_end(list* end);
+//void Solution(list*& head, list*& end, list*& Even_head, list*& Even_end);
+//
+//
+//int main()
+//{
+//    setlocale(LC_ALL, "rus");
+//    list* head = nullptr;
+//    list* end = nullptr;
+//    list* Even_head = nullptr;
+//    list* Even_end = nullptr;
+//    int choice, info = 0;
+//    while (true)
+//    {
+//        cout << " 1. Создание\n 2. Добавление\n 3. Удаление\n 4. Просмотр \n 5. Сортировка\n 6. Выход" << endl;
+//        cin >> choice;
+//        switch (choice)
+//        {
+//        case 1:
+//            Create(head, end);
+//            system("cls");
+//            break;
+//        case 2:
+//            Add(head, end);
+//            system("cls");
+//            break;
+//        case 3:
+//            Del_el(head);
+//            system("cls");
+//            break;
+//        case 4:
+//            View(head, end);
+//            Sleep(3000);
+//            system("cls");
+//            break;
+//        case 5:
+//            Solution(head, end, Even_head, Even_end);
+//            View(Even_head, Even_end);
+//            View(head,end);
+//            Sleep(3000);
+//            system("cls");
+//            break;
+//        case 6:
+//            Delete(Even_head, Even_end);
+//            Delete(head, end);
+//            return 0;
+//            break;
+//        default:
+//            cout << "Повторите еще раз" << endl;
+//            break;
+//        }
+//    }
+//}
+//
+//void Create(list*& head, list*& end)
+//{
+//    if (head == NULL)
+//    {
+//        int kolvo, i, info;
+//        cout << "Введите количество элементов" << endl;
+//        cin >> kolvo;
+//        if (cin.fail() || kolvo < 0)
+//        {
+//            cout << "Условия ввода не соблюдены" << endl;
+//            return;
+//        }
+//        cout << "1-ый ";
+//        cin >> info;
+//        list* t = new list;
+//        t->info=info;
+//        t->next=NULL;
+//        t->prev=NULL;
+//        head = end = t;
+//        for (i = 1; i < kolvo; i++)
+//        {
+//            cout << i + 1 << "-ый ";
+//            cin >> info;
+//            Add_end(end, info);
+//        }
+//    }
+//    else
+//        cout << "Список уже создан" << endl;
+//}
+//
+//void Add(list*& head, list*& end)
+//{
+//    cout << " 1.Добавить элемент в начало списка\n 2.Добавить элемент в конец списка" << endl;
+//    int u, element;
+//    cin >> u;
+//    switch (u)
+//    {
+//    case 1:
+//        cout << "Введите добавляемый элемент" << endl;
+//        cin >> element;
+//        Add_head(head, element);
+//        break;
+//    case 2:
+//        cout << "Введите добавляемый элемент" << endl;
+//        cin >> element;
+//        Add_end(end, element);
+//        break;
+//    default:
+//        cout << "Данный символ ввести невозможно" << endl;
+//        break;
+//    }
+//}
+//
+//void Add_end(list*& end, int inf)
+//{
+//    list* t = new list;
+//    t->info = inf;
+//    t->next = NULL;
+//    t->prev = end;
+//    end->next = t;
+//    end = t;
+//}
+//
+//void Add_head(list*& head, int inf)
+//{
+//    list* t = new list;
+//    t->prev = NULL;
+//    t->info = inf;
+//    t->next = head;
+//    head->prev = t;
+//    head = t;
+//}
+//
+//void Del_el(list*& head)
+//{
+//    if (head != NULL)
+//    {
+//        list* t = nullptr;
+//        t = head;
+//        head = head->next;
+//        delete t;
+//    }
+//
+//}
+//
+//void Delete(list*& head, list*& end)
+//{
+//
+//    while (head != NULL)
+//    {
+//        list* t = nullptr;
+//        t = head;
+//        head = head->next;
+//        delete t;
+//    }
+//}
+//
+//void View(list* head, list* end)
+//{
+//
+//    if (head == NULL)
+//    {
+//        cout << "Список пуст!" << endl;
+//        return;
+//    }
+//    cout << "\n 1. Просмотр списка сначала\n 2. Просмотр списка с конца" << endl;
+//    int r;
+//    cin >> r;
+//    switch (r)
+//    {
+//    case 1:
+//        View_head(head);
+//        break;
+//    case 2:
+//        View_end(end);
+//        break;
+//    default:
+//        cout << "Значение введено неправильно" << endl;
+//        return;
+//    }
+//}
+//
+//void View_head(list* head)
+//{
+//    list* t = head;
+//    while (t != NULL)
+//    {
+//        cout << "Элемент равен " << t->info << endl;
+//        t = t->next;
+//    }
+//}
+//
+//void View_end(list* end)
+//{
+//    list* t = end;
+//    while (t != NULL)
+//    {
+//        cout << "Элемент равен " << t->info << endl;
+//        t = t->prev;
+//    }
+//}
+//void Solution(list*& head, list*& end, list*& Even_head, list*& Even_end)
+//{
+//    list* current = head;
+//    head = end = nullptr;
+//    int q = 1;
+//    while (current != NULL)
+//    {
+//        if (current->info % 2 == 0)
+//        {
+//            if (Even_head == NULL)
+//            {
+//                list* t = current;
+//                current = current->next;
+//                t->prev = NULL;
+//                t->next = NULL;
+//                Even_head = Even_end = t;
+//            }
+//            else
+//            {
+//                list* tmp = current;
+//                current = current->next;
+//                tmp->prev = Even_end;
+//                Even_end->next = tmp;
+//                Even_end = tmp;
+//                tmp->next = NULL;
+//            }
+//        }
+//        else
+//        {
+//
+//            if (q == 1)
+//            {
+//                list* t = current;
+//                current = current->next;
+//                t->prev = NULL;
+//                t->next = NULL;
+//                head = end = t;
+//                q++;
+//            }
+//            else 
+//            {
+//                list* tmp = current;
+//                current = current->next;
+//                tmp->next = head;
+//                tmp->prev = NULL;
+//                head->prev = tmp;
+//                head = tmp;
+//            }
+//        }
+//    }
+//}   
+#include <iostream>
+#include "windows.h"
+#include <fstream>
+using namespace std;
+
+struct list
+{
+	int info;
+	list* next, * prev;
+};
+
+
+void Create(list*& head, list*& end);
+void Add(list*& head, list*& end);
+void Add_end(list*& end, int inf);
+void Add_head(list*& head, int inf);
+void Del_el(list*& head);
+void Delete(list*& head, list*&);
+void View(list* head, list* end);
+void View_head(list* head);
+void View_end(list* end);
+void Del(list*& head, list*& end);
+//void Solution(list*& head, list*& end, list*& Even_head, list*& Even_end);
+
+
+int main()
+{
+	setlocale(LC_ALL, "rus");
+	list* head = nullptr;
+	list* end = nullptr;
+	list* Even_head = nullptr;
+	list* Even_end = nullptr;
+	int choice, info = 0;
+	while (true)
+	{
+		cout << " 1. Создание\n 2. Добавление\n 3. Удаление\n 4. Просмотр \n 5. Сортировка\n 6. Выход" << endl;
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			Create(head, end);
+			system("cls");
+			break;
+		case 2:
+			Add(head, end);
+			system("cls");
+			break;
+		case 3:
+			Del_el(head);
+			system("cls");
+			break;
+		case 4:
+			View(head, end);
+			Sleep(3000);
+			system("cls");
+			break;
+		case 5:
+			Del(head, end);//Solution(head, end, Even_head, Even_end);
+			Sleep(3000);
+			system("cls");
+			break;
+		case 6:
+			Delete(Even_head, Even_end);
+			Delete(head, end);
+			return 0;
+			break;
+		default:
+			cout << "Повторите еще раз" << endl;
+			break;
+		}
+	}
+}
+
+void Create(list*& head, list*& end)
+{
+	if (head == NULL)
+	{
+		int kolvo, i, info;
+		cout << "Введите количество элементов" << endl;
+		cin >> kolvo;
+		if (cin.fail() || kolvo < 0)
+		{
+			cout << "Условия ввода не соблюдены" << endl;
+			return;
+		}
+		cout << "1-ый ";
+		cin >> info;
+		list* t = new list;
+		t->info = info;
+		t->next = NULL;
+		t->prev = NULL;
+		head = end = t;
+		for (i = 1; i < kolvo; i++)
+		{
+			cout << i + 1 << "-ый ";
+			cin >> info;
+			Add_end(end, info);
+		}
+	}
+	else
+		cout << "Список уже создан" << endl;
+}
+
+void Add(list*& head, list*& end)
+{
+	cout << " 1.Добавить элемент в начало списка\n 2.Добавить элемент в конец списка" << endl;
+	int u, element;
+	cin >> u;
+	switch (u)
+	{
+	case 1:
+		cout << "Введите добавляемый элемент" << endl;
+		cin >> element;
+		Add_head(head, element);
+		break;
+	case 2:
+		cout << "Введите добавляемый элемент" << endl;
+		cin >> element;
+		Add_end(end, element);
+		break;
+	default:
+		cout << "Данный символ ввести невозможно" << endl;
+		break;
+	}
+}
+
+void Add_end(list*& end, int inf)
+{
+	list* t = new list;
+	t->info = inf;
+	t->next = NULL;
+	t->prev = end;
+	end->next = t;
+	end = t;
+}
+
+void Add_head(list*& head, int inf)
+{
+	list* t = new list;
+	t->prev = NULL;
+	t->info = inf;
+	t->next = head;
+	head->prev = t;
+	head = t;
+}
+
+void Del_el(list*& head)
+{
+	if (head != NULL)
+	{
+		list* t = nullptr;
+		t = head;
+		head = head->next;
+		delete t;
+	}
+
+}
+
+void Delete(list*& head, list*& end)
+{
+
+	while (head != NULL)
+	{
+		list* t = nullptr;
+		t = head;
+		head = head->next;
+		delete t;
+	}
+}
+
+void View(list* head, list* end)
+{
+
+	if (head == NULL)
+	{
+		cout << "Список пуст!" << endl;
+		return;
+	}
+	cout << "\n 1. Просмотр списка сначала\n 2. Просмотр списка с конца" << endl;
+	int r;
+	cin >> r;
+	switch (r)
+	{
+	case 1:
+		View_head(head);
+		break;
+	case 2:
+		View_end(end);
+		break;
+	default:
+		cout << "Значение введено неправильно" << endl;
+		return;
+	}
+}
+
+void View_head(list* head)
+{
+	list* t = head;
+	while (t != NULL)
+	{
+		cout << "Элемент равен " << t->info << endl;
+		t = t->next;
+	}
+}
+
+void View_end(list* end)
+{
+	list* t = end;
+	while (t != NULL)
+	{
+		cout << "Элемент равен " << t->info << endl;
+		t = t->prev;
+	}
+}
+//void Solution(list*& head, list*& end, list*& Even_head, list*& Even_end)
+////{
+////	list* temphead = new list, * tempend = new list;
+////	temphead->next = head; temphead->prev = NULL; head->prev = temphead; head = temphead;
+////	tempend->prev = end; tempend->next = NULL; end->next = tempend; end = tempend;
+////	list* current = head->next;
+////	while (current->next != NULL)
+////	{
+////		if (current->info % 2 == 0)
+////		{
+////
+////			list* temp = current;
+////			current = current->next;
+////			temp->prev->next = temp->next;
+////			temp->next->prev = temp->prev;
+////			if (Even_head == NULL)
+////			{
+////				temp->prev = NULL;
+////				temp->next = NULL;
+////				Even_head = Even_end = temp;
+////			}
+////			else
+////			{
+////				Even_end->next = temp;
+////				temp->next = NULL;
+////				temp->prev = Even_end;
+////				Even_end = temp;
+////			}
+////		}
+////		else current = current->next;
+////	}
+////
+////	head = head->next;
+////	delete head->prev;
+////	head->prev = NULL;
+////	end = end->prev;
+////	delete end->next;
+////	end->next = NULL;
+////
+////	current = Even_head;
+////	cout << "Новая очередь: " << endl;
+////	while (current != NULL)
+////	{
+////		cout << current->info << endl;
+////		current = current->next;
+////	}
+////	current = head;
+////	cout << "Остаток первой очереди: " << endl;
+////	while (current != NULL)
+////	{
+////		cout << current->info << endl;
+////		current = current->next;
+////	}
+////
+////}
+void Del(list*&head,list*&end)
+{
+	cout << "Введите элемент который хотите удалить" << endl;
+	int k;
+	cin >> k;
+	list* temphead = new list;
+	list* tempend = new list;
+	head->prev = temphead;
+	temphead->next = head;
+	head = temphead;
+	end->next = tempend;
+	tempend->prev = end;
+	end = tempend;
+	list* current = head->next;
+	while (current!=tempend)
+	{
+		if (current->info == k)
+		{
+			list* t = current;
+			current = current->next;
+			t->prev->next = t->next;
+			t->next->prev = t->prev;
+			delete t;
+		}
+		else
+			current = current->next;
+	}
+	current = head;
+	head = head->next;
+	head->prev = NULL;
+	delete current;
+	current = end;
+	end = end->prev;
+	end->next = NULL;
+	delete current;
+}
