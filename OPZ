@@ -1,0 +1,287 @@
+#include<iostream>
+#include<conio.h>
+#include <stdlib.h>
+using namespace std;
+
+struct Stack
+{
+	char info;
+	Stack* next;
+};
+
+int Prior(char g);
+void Push(Stack*& head, char info);
+Stack* Pop(Stack* head, char* info);
+double Result(char* Out);
+void Proverochka(char(&s)[36]);
+int fun(char* arrchar, int* arrint, char c);
+
+int main()
+{
+	setlocale(LC_ALL, "rus");	
+	Stack* head = nullptr;
+	char a, In[36], Out[36];
+	int k = 0, l = 0;
+	int choice;
+	while (true)
+	{
+		cout << "\n1.Ввод выражения\n2.Просмтор исходного выражаения\n3.Просмотр ОПЗ\n4.Подсчет выражения\n5.Выход" << endl;
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			cout << "Введите формулу ";
+			Proverochka(In);
+			k = l = 0;
+			            while (In[k] != '\0')
+			            {
+			                if (In[k] >= 'a' && In[k] <= 'z')
+			                {
+			                    Out[l++] = In[k++];
+			                    continue;
+			                }
+			
+			                if (In[k] == '(')
+			                {
+			                    Push(head, In[k++]);
+			                    continue;
+			                }
+			
+			                if (In[k] == ')')
+			                {
+			                    while ((head->info) != '(')
+			                    {
+			                        head = Pop(head, &a);
+			                        Out[l++] = a;
+			                    }
+			                    head = Pop(head, &a);
+			                    k++;
+			                    continue;
+			                }
+			
+			                if (In[k] == '+' || In[k] == '-' || In[k] == '*' || In[k] == '/'||In[k]=='^')
+			                {
+			                    while ((head != NULL) && (Prior(head->info) >= Prior(In[k])))
+			                    {
+			                        head = Pop(head, &a);
+			                        Out[l++] = a;
+			                    }
+			
+			                    Push(head, In[k++]);
+			                    continue;
+			                }
+			            }
+			            while (head)
+			            {
+			                head = Pop(head, &a);
+			                Out[l++] = a;
+			            }
+			            Out[l] = '\0';
+			            break;
+			break;
+		case 2:
+			if (true)
+				cout << "Формула: " << In;
+			else
+				cout << "Сначала введите формулу!";
+			break;
+		case 3:
+			if (true)
+				cout << "Формула: " << Out;
+			else
+				cout << "Сначала введите формулу!";
+			break;
+		case 4:
+			if (true)
+				cout << "Результат вычислений: " << Result(Out);
+			else
+				cout << "Сначала введите формулу!";
+			break;
+		case 5:
+			cout << "Программа завершена" <<endl;
+			return 0;
+			break;
+		default: cout << "Повторите еще раз" << endl;
+		}
+	}
+}
+
+int Prior(char g)
+{
+	switch (g)
+	{
+	case'^':return 4;
+	case'/':case'*':return 3;
+	case'-':case'+':return 2;
+	case'(':return 1;
+	}
+}
+
+void Push(Stack*& head, char inf)
+{
+	Stack* t = new Stack;
+	t->info = inf;
+	t->next = head;
+	head = t;
+}
+
+Stack* Pop(Stack* head, char* out)
+{
+	Stack* t = head;
+	*out = head->info;
+	head = head->next;
+	delete t;
+	return head;
+}
+
+int fun(char* arrchar, int* arrint, char c)
+{
+	int i = 0;
+	for (i = 0; arrchar[i] != '\0'; i++)
+	{
+		if (arrchar[i] == c)
+		{
+			return arrint[i];
+		}
+	}
+	cout << c << " = ";
+	cin >> arrint[i];
+	arrchar[i + 1] = '\0';
+	arrchar[i] = c;
+	return arrint[i];
+}
+
+double Result(char* Out)
+{
+	Stack* pbeg = NULL;
+	Stack* temp;
+	char arrchar[30];
+	arrchar[0] = '\0';
+	int arrint[30];
+	for (int i = 0; Out[i] != '\0'; i++)
+	{
+		if (Out[i] >= 'a' && Out[i] <= 'z')
+		{
+			Stack* t = new Stack;
+			t->info = fun(arrchar, arrint, Out[i]);
+			t->next = pbeg;
+			pbeg = t;
+		}
+		else
+		{
+			switch (Out[i])
+			{
+			case '/':
+			{   if (pbeg->info != 0)
+
+				pbeg->next->info = pbeg->next->info / pbeg->info;
+			else
+			{
+				cout << "Деление на 0 нельзя" << endl;
+				return Result(Out);
+			}
+			break;
+			}
+			case '*':
+			{
+				pbeg->next->info = pbeg->next->info * pbeg->info;
+				break;
+			}
+			case '+':
+			{
+				pbeg->next->info = pbeg->next->info + pbeg->info;
+				break;
+			}
+			case '-':
+			{
+				pbeg->next->info = pbeg->next->info - pbeg->info;
+				break;
+			}
+			case '^':
+			{
+				pbeg->next->info = pow(pbeg->next->info, pbeg->info);
+				break;
+			}
+			}
+			temp = pbeg;
+			pbeg = pbeg->next;
+			delete temp;
+		}
+	}
+	return pbeg->info;
+}
+void Proverochka(char(&s)[36])
+{
+	int k = 0, l = 0;
+	bool letter = true, operation = false, bracket_open = true, bracket_close = false;
+	char ch = _getch();
+	do {
+		if (ch >= 'a' && ch <= 'z' && letter)
+		{
+			cout << ch;
+			s[k++] = ch;
+			letter = false;
+			operation = true;
+			bracket_open = false;
+			bracket_close = true;
+			ch = _getch();
+			continue;
+		}
+
+		if (ch == '(' && bracket_open)
+		{
+			l++;
+			cout << ch;
+			s[k++] = ch;
+			letter = true;
+			operation = false;
+			bracket_close = true;
+			ch = _getch();
+			continue;
+		}
+
+		if (ch == ')' && l > 0 && bracket_close && s[k - 1] != '(')
+		{
+			cout << ch;
+			s[k++] = ch;
+			letter = false;
+			operation = true;
+			l--;
+			ch = _getch();
+			continue;
+		}
+
+		if ((ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^') && operation)
+		{
+			cout << ch;
+			s[k++] = ch;
+			operation = false;
+			letter = true;
+			bracket_open = true;
+			bracket_close = false;
+			ch = _getch();
+			continue;
+		}
+		ch = _getch();
+	} while (ch != '\r' && k < 35);
+	if (k > 2)
+	{
+		if (s[k - 1] == '+' || s[k - 1] == '-' || s[k - 1] == '*' || s[k - 1] == '/'||s[k-1]=='^')
+		{
+			cout << "\nВвод некорректен – в конце формулы не может стоять знак операции!" << endl << "Попробуйте еще раз: ";
+			Proverochka(s);
+		}
+		else if (l != 0)
+		{
+			cout << "\nВвод некорректен – проверьте количество открывающихся и закрывающихся скобок!" << endl << "Попробуйте еще раз: ";
+			Proverochka(s);
+		}
+		else
+			s[k] = '\0';
+	}
+	else
+	{
+		cout << "\nВы ввели слишком короткую формулу!" << endl << "Попробуйте еще раз: ";
+		Proverochka(s);
+	}
+}
